@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Pembelian Saya</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="loading" style="text-align: center; padding: 60px;">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Memuat pembelian...</p>
+  </div>
+
+  <div *ngIf="!loading && purchases.length == 0" style="text-align: center; padding: 60px; color: var(--ion-color-medium);">
+    <p style="font-size: 3rem; margin: 0;">🛒</p>
+    <p>Belum ada pembelian</p>
+    <ion-button color="primary" (click)="router.navigate(['/katalog'])">Lihat Katalog</ion-button>
+  </div>
+
+  <ion-list *ngIf="!loading && purchases.length > 0">
+    <ion-card *ngFor="let p of purchases" style="margin: 10px 15px;">
+      <ion-card-content>
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+          <div>
+            <h3 style="margin: 0;">{{ p.product_title || 'Produk #' + p.id }}</h3>
+            <p style="margin: 5px 0; color: var(--ion-color-medium); font-size: 0.85rem;">
+              {{ p.created_at | date:'dd MMM yyyy HH:mm' }}
+            </p>
+          </div>
+          <ion-badge [color]="getStatusBadge(p.status).color">
+            {{ getStatusBadge(p.status).text }}
+          </ion-badge>
+        </div>
+
+        <p *ngIf="p.price" style="margin: 5px 0; font-weight: 600;">
+          {{ p.price_text || ('IDR ' + (p.price | number)) }}
+        </p>
+
+        <!-- Bukti Pembayaran -->
+        <div *ngIf="p.status == 'pending'" style="margin-top: 10px;">
+          <p style="font-size: 0.85rem; color: var(--ion-color-warning);">
+            ⚠️ Menunggu konfirmasi pembayaran
+          </p>
+          <ion-button *ngIf="!p.proof_image" size="small" color="warning" (click)="goToUpload(p.id)">
+            <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+            Upload Bukti Bayar
+          </ion-button>
+          <ion-button *ngIf="p.proof_image" size="small" color="primary" (click)="goToUpload(p.id)">
+            <ion-icon name="refresh-outline" slot="start"></ion-icon>
+            Ganti Bukti
+          </ion-button>
+        </div>
+
+        <!-- Link Download (jika terverifikasi) -->
+        <div *ngIf="p.status == 'verified' && p.links && p.links.length > 0" style="margin-top: 10px;">
+          <p style="font-size: 0.85rem; color: var(--ion-color-success); font-weight: 600;">
+            ✅ Pembayaran terverifikasi - Link Download aktif
+          </p>
+          <ion-button *ngFor="let link of p.links" size="small" color="success" (click)="download(link.url)" style="margin-right: 5px;">
+            <ion-icon name="download-outline" slot="start"></ion-icon>
+            {{ link.label || 'Download' }}
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <div style="height: 20px;"></div>
+</ion-content>
+
+<!-- Bottom Navigation -->
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button (click)="router.navigate(['/home'])">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>Beranda</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="router.navigate(['/katalog'])">
+      <ion-icon name="grid-outline"></ion-icon>
+      <ion-label>Katalog</ion-label>
+    </ion-tab-button>
+    <ion-tab-button selected>
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <ion-label>Pembelian</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="goToProfil()">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>Profil</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profil"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Ubah Profil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Nama Lengkap</ion-label>
+        <ion-input [(ngModel)]="full_name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" [(ngModel)]="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Nomor WhatsApp</ion-label>
+        <ion-input type="tel" [(ngModel)]="whatsapp"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" color="primary" (click)="save()" style="margin-top: 20px;">
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        Simpan Perubahan
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

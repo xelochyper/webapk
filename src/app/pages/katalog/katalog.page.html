@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>📚 Katalog Produk</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div style="padding: 15px; text-align: center;">
+    <p style="margin: 0; color: var(--ion-color-medium);">
+      Total <strong>{{ totalProducts }}</strong> produk • Halaman <strong>{{ currentPage }}</strong> dari <strong>{{ totalPages }}</strong>
+    </p>
+  </div>
+
+  <div *ngIf="loading" style="text-align: center; padding: 40px;">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div class="product-grid" *ngIf="!loading && products.length > 0">
+    <div class="product-card" *ngFor="let p of products" (click)="goToDetail(p.slug)">
+      <img [src]="p.cover" [alt]="p.title" onerror="this.src='assets/icon/default.png'">
+      <div class="product-info">
+        <div class="product-name">{{ p.title }}</div>
+        <div class="product-price" [class.free]="p.price == 0">
+          {{ p.price_text }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && products.length == 0" style="text-align: center; padding: 40px; color: var(--ion-color-medium);">
+    <p style="font-size: 3rem; margin: 0;">📭</p>
+    <p>Belum ada produk tersedia</p>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="!loading && totalPages > 1">
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage == 1">‹</button>
+    <button *ngFor="let p of getPages()" (click)="goToPage(p)" [class.active]="p == currentPage">{{ p }}</button>
+    <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage == totalPages">›</button>
+  </div>
+
+  <div style="height: 20px;"></div>
+</ion-content>
+
+<!-- Bottom Navigation -->
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button (click)="router.navigate(['/home'])">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>Beranda</ion-label>
+    </ion-tab-button>
+    <ion-tab-button selected>
+      <ion-icon name="grid"></ion-icon>
+      <ion-label>Katalog</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="router.navigate(['/pembelian'])">
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+      <ion-label>Pembelian</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="goToProfil()">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>Profil</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

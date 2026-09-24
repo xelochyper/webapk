@@ -1,0 +1,7 @@
+{
+  "name": "Maino Games",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

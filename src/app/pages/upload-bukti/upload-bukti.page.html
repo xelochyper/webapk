@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/pembelian"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Upload Bukti Bayar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-content>
+      <h3 style="margin-top: 0;">📤 Upload Bukti Pembayaran</h3>
+      <p style="color: var(--ion-color-medium); font-size: 0.9rem;">
+        Upload screenshot bukti transfer/pembayaran Anda. Admin akan memverifikasi dalam 1x24 jam.
+      </p>
+
+      <!-- Preview Gambar -->
+      <div *ngIf="previewUrl" style="text-align: center; margin: 20px 0;">
+        <img [src]="previewUrl" style="max-width: 100%; max-height: 300px; border-radius: 10px; border: 2px solid var(--ion-color-primary);">
+      </div>
+
+      <!-- Pilih File -->
+      <input type="file" accept="image/*" (change)="onFileSelected($event)" style="margin: 20px 0; width: 100%;">
+
+      <ion-button expand="block" color="primary" (click)="upload()" [disabled]="!selectedFile">
+        <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+        Kirim Bukti Pembayaran
+      </ion-button>
+
+      <p *ngIf="!selectedFile" style="text-align: center; color: var(--ion-color-medium); font-size: 0.85rem; margin-top: 15px;">
+        Pilih gambar terlebih dahulu
+      </p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

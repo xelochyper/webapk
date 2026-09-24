@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Profil Saya</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!loading && user">
+  <!-- Header Profil -->
+  <div style="background: linear-gradient(135deg, #0071e3, #bf5af2); padding: 40px 20px; text-align: center; color: #fff;">
+    <div *ngIf="user.avatar" style="width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 15px; overflow: hidden; border: 3px solid #fff;">
+      <img [src]="user.avatar" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    <div *ngIf="!user.avatar" style="width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 15px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 3rem; border: 3px solid #fff;">
+      {{ getInitial(user.full_name) }}
+    </div>
+    <h2 style="margin: 0;">{{ user.full_name }}</h2>
+    <p style="margin: 5px 0 0; opacity: 0.9;">{{ user.email }}</p>
+  </div>
+
+  <!-- Menu -->
+  <ion-list style="margin-top: 20px;">
+    <ion-item (click)="goToEdit()">
+      <ion-icon name="create-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>Ubah Profil</ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+
+    <ion-item (click)="goToPembelian()">
+      <ion-icon name="cart-outline" slot="start" color="success"></ion-icon>
+      <ion-label>Pembelian Saya</ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+
+    <ion-item (click)="logout()">
+      <ion-icon name="log-out-outline" slot="start" color="danger"></ion-icon>
+      <ion-label>Keluar</ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <!-- Info Akun -->
+  <ion-card style="margin: 20px;">
+    <ion-card-header>
+      <ion-card-title>Informasi Akun</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Nama:</strong> {{ user.full_name }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>WhatsApp:</strong> {{ user.whatsapp || '-' }}</p>
+      <p *ngIf="user.username"><strong>Username:</strong> @{{ user.username }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-content *ngIf="loading">
+  <div style="text-align: center; padding: 60px;">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Memuat profil...</p>
+  </div>
+</ion-content>
+
+<!-- Bottom Navigation -->
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button (click)="router.navigate(['/home'])">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>Beranda</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="router.navigate(['/katalog'])">
+      <ion-icon name="grid-outline"></ion-icon>
+      <ion-label>Katalog</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="router.navigate(['/pembelian'])">
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+      <ion-label>Pembelian</ion-label>
+    </ion-tab-button>
+    <ion-tab-button selected>
+      <ion-icon name="person"></ion-icon>
+      <ion-label>Profil</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

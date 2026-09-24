@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/katalog"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detail Produk</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!loading && product">
+  <!-- Gambar Produk -->
+  <div style="width: 100%; height: 250px; overflow: hidden;">
+    <img [src]="product.cover" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='assets/icon/default.png'">
+  </div>
+
+  <!-- Info Produk -->
+  <div style="padding: 20px;">
+    <h2 style="margin: 0 0 10px;">{{ product.title }}</h2>
+    <h3 style="color: var(--ion-color-primary); margin: 0 0 20px;">{{ product.price_text }}</h3>
+
+    <div style="background: var(--ion-color-light); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+      <h4 style="margin: 0 0 10px;">Deskripsi</h4>
+      <p style="margin: 0; line-height: 1.6; white-space: pre-wrap;">{{ product.description }}</p>
+    </div>
+
+    <!-- Link Download (jika ada) -->
+    <div *ngIf="links.length > 0 && product.price == 0" style="margin-bottom: 20px;">
+      <h4 style="margin: 0 0 10px;">⬇️ Link Download</h4>
+      <ion-button *ngFor="let link of links" expand="block" color="success" (click)="download(link.url, link.label)">
+        <ion-icon name="download-outline" slot="start"></ion-icon>
+        {{ link.label || 'Download' }}
+      </ion-button>
+      <p style="font-size: 0.8rem; color: var(--ion-color-medium); margin-top: 10px;">
+        * Klik download akan membuka browser bawaan HP
+      </p>
+    </div>
+
+    <!-- Tombol Beli (jika berbayar) -->
+    <ion-button *ngIf="product.price > 0" expand="block" color="primary" (click)="beli()">
+      <ion-icon name="cart-outline" slot="start"></ion-icon>
+      Beli Sekarang - {{ product.price_text }}
+    </ion-button>
+
+    <!-- Pilihan Metode Pembayaran -->
+    <div *ngIf="showPayment" style="margin-top: 20px;">
+      <h4 style="margin: 0 0 10px;">Pilih Metode Pembayaran</h4>
+      <ion-list>
+        <ion-item *ngFor="let m of paymentMethods" (click)="selectPayment(m)" [class.selected]="selectedPayment?.id == m.id" style="margin-bottom: 8px; border-radius: 10px; border: 2px solid;" [style.border-color]="selectedPayment?.id == m.id ? 'var(--ion-color-primary)' : 'transparent'">
+          <ion-label>
+            <h3>{{ m.name }}</h3>
+            <p *ngIf="m.account_number">No: {{ m.account_number }} a.n {{ m.account_name }}</p>
+            <p *ngIf="m.type == 'qris'">Scan QRIS</p>
+          </ion-label>
+          <ion-radio slot="start" [checked]="selectedPayment?.id == m.id"></ion-radio>
+        </ion-item>
+      </ion-list>
+
+      <!-- Detail Pembayaran -->
+      <div *ngIf="selectedPayment" style="background: var(--ion-color-light); padding: 15px; border-radius: 10px; margin: 15px 0;">
+        <h4 style="margin: 0 0 10px;">Detail Pembayaran</h4>
+        <p style="margin: 5px 0;">Metode: <strong>{{ selectedPayment.name }}</strong></p>
+        <p *ngIf="selectedPayment.account_number" style="margin: 5px 0;">No: <strong>{{ selectedPayment.account_number }}</strong></p>
+        <p *ngIf="selectedPayment.account_name" style="margin: 5px 0;">a.n: <strong>{{ selectedPayment.account_name }}</strong></p>
+        <p style="margin: 5px 0;">Total: <strong>{{ product.price_text }}</strong></p>
+        <p style="font-size: 0.85rem; color: var(--ion-color-medium); margin-top: 10px;">
+          Silakan transfer sesuai jumlah di atas, lalu upload bukti pembayaran di halaman Pembelian
+        </p>
+      </div>
+
+      <ion-button expand="block" color="success" (click)="confirmPurchase()">
+        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+        Konfirmasi Pembelian
+      </ion-button>
+    </div>
+  </div>
+
+  <div style="height: 20px;"></div>
+</ion-content>
+
+<ion-content *ngIf="loading">
+  <div style="text-align: center; padding: 60px;">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Memuat detail produk...</p>
+  </div>
+</ion-content>

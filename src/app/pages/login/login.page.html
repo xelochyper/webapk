@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div style="text-align: center; padding: 30px 0;">
+    <div style="font-size: 4rem;">🎮</div>
+    <h2>Maino Games</h2>
+    <p style="color: var(--ion-color-medium);">Masuk untuk membeli & download produk</p>
+  </div>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" [(ngModel)]="email" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="password" [(ngModel)]="password" required></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" color="primary" (click)="login()" style="margin-top: 20px;">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon>
+        Masuk
+      </ion-button>
+
+      <div style="text-align: center; margin-top: 15px;">
+        <p>Belum punya akun?
+          <a (click)="goToRegister()" style="color: var(--ion-color-primary); cursor: pointer; font-weight: 500;">Daftar di sini</a>
+        </p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
